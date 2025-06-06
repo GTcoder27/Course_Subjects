@@ -1,0 +1,21 @@
+-- 1. Create the database
+CREATE DATABASE emp;
+
+-- 2. Use the database
+USE emp;
+
+-- 3. Create the 'users' table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(100) NOT NULL
+);
+
+-- 4. Insert records into 'users' table
+INSERT INTO users (username, password) VALUES ('bhushan', 'bhushna@123');
+INSERT INTO users (username, password) VALUES ('vighnesh', 'vighu@123');
+INSERT INTO users (username, password) VALUES ('om', 'om@123');
+INSERT INTO users (username, password) VALUES ('akshu', 'akshu@123');
+
+-- 5. Display all records from the 'users' table
+SELECT * FROM users;
