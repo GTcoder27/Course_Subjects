@@ -1,0 +1,619 @@
+practical1
+
+def process_range(input_range):
+    min_value, max_value = map(int, input_range.split('-'))
+    
+    if min_value + 1 <= max_value - 1:
+        range_string = f"{min_value + 1}-{max_value - 1}"
+    else:
+        range_string = "No range available"
+    
+    print(f"Min value: {min_value}")
+    print(f"Max value: {max_value}")
+    print(f"Range: {range_string}")
+
+input_range = input("Enter a range: ")
+process_range(input_range)
+
+------------------------------------------------------------------------------------
+practical 2
+def is_valid_area_code(area_code):
+    if area_code == "":
+        return True
+    if len(area_code) == 3 and area_code.isdigit():
+        return 100 <= int(area_code) <= 999
+    return False
+
+def is_valid_prefix(prefix):
+    if len(prefix) == 3 and prefix.isdigit():
+        return prefix[0] not in ['0', '1'] and 200 <= int(prefix) <= 999
+    return False
+
+def is_valid_suffix(suffix):
+    if len(suffix) == 4 and suffix.isdigit():
+        return 1000 <= int(suffix) <= 9999
+    return False
+
+def is_valid_password(password):
+    return len(password) == 6 and password.isalnum()
+
+def is_valid_command(command):
+    valid_commands = ["Check status", "Deposit", "Withdrawal"]
+    return command in valid_commands
+
+def perform_banking_operation(command):
+    if command == "Deposit":
+        return "Success: Amount deposited successfully."
+    elif command == "Withdrawal":
+        return "Success: Amount withdrawn successfully."
+    elif command == "Check status":
+        return "Success: Account status checked."
+    return "Invalid Command!"
+
+def test_bank_application():
+    print("Welcome to the Automated Banking Application!")
+
+    # Validate Area Code
+    area_code = input("Enter Area Code (Blank or three-digit number): ")
+    if not is_valid_area_code(area_code):
+        print("Invalid Area Code!")
+        return
+
+    # Validate Prefix
+    prefix = input("Enter Prefix (Three-digit number not starting with 0 or 1): ")
+    if not is_valid_prefix(prefix):
+        print("Invalid Prefix!")
+        return
+
+    # Validate Suffix
+    suffix = input("Enter Suffix (Four-digit number): ")
+    if not is_valid_suffix(suffix):
+        print("Invalid Suffix!")
+        return
+
+    # Validate Password
+    password = input("Enter Password (Six-character alphanumeric): ")
+    if not is_valid_password(password):
+        print("Invalid Password!")
+        return
+
+    # Validate Command
+    command = input("Enter Command (Check status, Deposit, Withdrawal): ")
+    if not is_valid_command(command):
+        print("Invalid Command!")
+        return
+
+    # Perform Banking Operation
+    result = perform_banking_operation(command)
+
+    # Display Result
+    print(result)
+
+# Run the Application
+test_bank_application()
+------------------------------------------------------------------------------------------
+practical 3
+# Function to validate the input numbers and explain why they're valid/invalid
+def validate_number(input_number: str):
+    # Rule 1: Ends with a blank space
+    if input_number.endswith(" "):
+        return "Invalid number", "Number does not end with a blank space."
+
+    input_number = input_number.strip()  # Remove the trailing blank space for validation
+
+    # Rule 2: Optional sign
+    if input_number[0] in "+-":
+        input_number = input_number[1:]
+
+    # Rule 3: Check if it's a valid decimal or integer
+    if "." in input_number:
+        parts = input_number.split(".")
+        if len(parts) != 2:
+            return "Invalid number", "Decimal number is incorrectly formatted."
+
+        if not parts[0].isdigit():
+            return "Invalid number", "Digits before the decimal point are missing."
+
+        if len(parts[1]) < 2:
+            return "Invalid number", "Decimal number has fewer than two digits after the decimal point."
+        elif len(parts[1]) > 2:
+            return "Invalid number", "Decimal number has more than two digits after the decimal point."
+        elif not parts[1].isdigit():
+            return "Invalid number", "Decimal number contains invalid characters or is incorrectly formatted."
+        else:
+            return "Valid number", "Follows all rules for a valid number."
+    elif input_number.isdigit():
+        return "Valid number", "Follows all rules for a valid number."
+
+    return "Invalid number", "Number contains invalid characters or is incorrectly formatted."
+
+
+# Simulated test cases
+test_cases = [
+    "123", "-456", "123.45", "-78.90", "123.", "123.4", "123.456", "12 ", "-.90", "+123.45 ", "123.45"
+]
+
+# Generate results for the test cases
+output_table = []
+for i, test in enumerate(test_cases):
+    result, explanation = validate_number(test)
+    output_table.append((i + 1, test, result, explanation))
+
+# Display the output in table format
+header = f"{'Test Case':<10}{'Input':<15}{'Output':<20}{'Explanation':<50}"
+print(header)
+print("-" * len(header))
+
+for row in output_table:
+    print(f"{row[0]:<10}{row[1]:<15}{row[2]:<20}{row[3]:<50}")
+----------------------------------------------------------------------------------------------
+practical 4
+def max_value(i, j, k):
+    print(f"\nInput: i={i}, j={j}, k={k}")
+    if i > j:                          # Line 4
+        if i > k:                      # Line 5
+            print("Path 1: 1->2->3->4->5")
+            return i
+        else:                          # Line 6
+            print("Path 2: 1->2->3->4->6")
+            return k
+    else:                              # Line 7
+        if j > k:                      # Line 7
+            print("Path 3: 1->2->3->7")
+            return j
+        else:                          # Line 8
+            print("Path 4: 1->2->3->8")
+            return k
+
+# Test Cases for All 4 Paths
+test_cases = [
+    (5, 3, 1),  # Path 1: i > j and i > k
+    (5, 3, 6),  # Path 2: i > j and i <= k
+    (3, 5, 1),  # Path 3: i <= j and j > k
+    (3, 5, 7)   # Path 4: i <= j and j <= k
+]
+
+for idx, (i, j, k) in enumerate(test_cases, 1):
+    result = max_value(i, j, k)
+    print(f"Output (Test Case {idx}): {result}")
+----------------------------------------------------------------------------------------------
+practical 5
+def insertion_sort(arr):
+    swaps = 0
+    s = len(arr)
+    for i in range(1, s):
+        temp = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > temp:
+            arr[j + 1] = arr[j]
+            j -= 1
+            swaps += 1
+        arr[j + 1] = temp
+    return arr, swaps
+
+
+def print_array(arr):
+    return "{" + ", ".join(map(str, arr)) + "}"
+
+
+def run_test_cases():
+    test_cases = [
+        [1, 2, 3, 4, 5],    # Path 1
+        [1, 3, 2, 4, 5],    # Path 2
+        [5, 4, 3, 2, 1]     # Path 4
+    ]
+
+    print("Test Case No.\tInput Array\t\tExpected Output\t\tPath Taken")
+    for idx, test in enumerate(test_cases, 1):
+        input_array = test[:]
+        expected_output = sorted(test)
+        sorted_array, swaps = insertion_sort(input_array)
+
+        print(f"{idx}\t\t{print_array(test)}\t{print_array(sorted_array)}\t", end="")
+        if swaps == 0:
+            print("Path 1 (No swaps)")
+        elif swaps == 1:
+            print("Path 2 (One swap)")
+        else:
+            print("Path 4 (Worst case)")
+
+
+# Main block
+if __name__ == "__main__":
+    run_test_cases()
+-------------------------------------------------------------------------------------------------------
+practical 6
+def test_swap(a, b):
+    print(f"Test Case Input: a = {a}, b = {b}")
+
+    if a < b:
+        a, b = b, a  # Swap
+        print("Path Covered: Swap executed")
+        print(f"Expected Output: {a} {b}")
+    else:
+        print(f"Expected Output: {a} {b}")
+        print("Path Covered: No swap needed")
+    
+    print()  # Newline for separation
+
+
+# Main block to execute test cases
+if __name__ == "__main__":
+    test_swap(5, 10)
+    test_swap(10, 5)
+    test_swap(5, 5)
+--------------------------------------------------------------------------------------------------
+practical 9
+# Install ipywidgets if not already available
+!pip install ipywidgets
+
+# Import
+import ipywidgets as widgets
+from IPython.display import display, clear_output
+__________________________
+
+# Class for User Input
+class UserInput:
+    def __init__(self, salary, gender):
+        self.salary = salary
+        self.gender = gender
+
+    def getSalary(self):
+        return self.salary
+
+    def getGender(self):
+        return self.gender
+
+# Class for Tax Slabs
+class TaxSlab:
+    @staticmethod
+    def getTaxRate(salary, gender):
+        if salary <= 250000:
+            return 0
+        elif salary <= 500000:
+            return 0.10 if gender == 'Male' else 0.08
+        elif salary <= 1000000:
+            return 0.20 if gender == 'Male' else 0.18
+        else:
+            return 0.30 if gender == 'Male' else 0.28
+
+# Class for Tax Result
+class TaxResult:
+    @staticmethod
+    def displayTax(amount):
+        tax_output.value = f"{amount:.2f}"
+
+# Main Calculator Class
+class TaxCalculator:
+    def calculateTax(self):
+        try:
+            salary = float(salary_input.value)
+            gender = gender_input.value
+
+            if gender == '':
+                tax_output.value = "Error: Please select Gender!"
+                return
+
+            user = UserInput(salary, gender)
+            rate = TaxSlab.getTaxRate(user.getSalary(), user.getGender())
+            tax = salary * rate
+            TaxResult.displayTax(tax)
+
+        except ValueError:
+            tax_output.value = "Error: Invalid Salary!"
+
+    def clear(self):
+        salary_input.value = ''
+        gender_input.value = ''
+        tax_output.value = ''
+
+    def help(self):
+        help_text = """
+        Tax Slabs:
+        Salary Range         Male Tax    Female Tax
+        0 - 2,50,000         0%           0%
+        2,50,001 - 5,00,000  10%          8%
+        5,00,001 - 10,00,000 20%          18%
+        Above 10,00,000      30%          28%
+        """
+        tax_output.value = help_text
+
+    def quit(self):
+        clear_output()
+        print("Application Closed.")
+
+# Instantiate main calculator
+calculator = TaxCalculator()
+____________________________________
+
+
+# Input fields
+salary_input = widgets.Text(
+    description='Salary:',
+    placeholder='Enter Annual Salary',
+    style={'description_width': 'initial'}
+)
+
+gender_input = widgets.Dropdown(
+    options=['', 'Male', 'Female'],
+    description='Gender:',
+    style={'description_width': 'initial'}
+)
+
+# Output field
+tax_output = widgets.Text(
+    description='Tax to Pay:',
+    disabled=True,
+    style={'description_width': 'initial'}
+)
+
+# Buttons
+calculate_button = widgets.Button(description='Calculate Tax', button_style='success')
+clear_button = widgets.Button(description='Clear', button_style='warning')
+help_button = widgets.Button(description='Help', button_style='info')
+quit_button = widgets.Button(description='Quit', button_style='danger')
+____________________________________________
+
+# Button click events
+calculate_button.on_click(lambda x: calculator.calculateTax())
+clear_button.on_click(lambda x: calculator.clear())
+help_button.on_click(lambda x: calculator.help())
+quit_button.on_click(lambda x: calculator.quit())
+____________________________________________
+
+# Display all
+display(widgets.Label(value="=== SIMPLE TAX CALCULATOR ==="))
+display(salary_input)
+display(gender_input)
+display(widgets.HBox([calculate_button, clear_button, help_button, quit_button]))
+display(tax_output)
+#####################################################################
+
+using react 
+import React, { useState } from "react";
+
+export default function TaxCalculator() {
+  const [salary, setSalary] = useState("");
+  const [gender, setGender] = useState("");
+  const [tax, setTax] = useState(null);
+  const [showHelp, setShowHelp] = useState(false);
+
+  const calculateTax = () => {
+    let taxRate = 0;
+
+    if (gender === "male") {
+      if (salary <= 250000) taxRate = 0;
+      else if (salary <= 500000) taxRate = 0.05;
+      else if (salary <= 1000000) taxRate = 0.2;
+      else taxRate = 0.3;
+    } else if (gender === "female") {
+      if (salary <= 300000) taxRate = 0;
+      else if (salary <= 500000) taxRate = 0.05;
+      else if (salary <= 1000000) taxRate = 0.2;
+      else taxRate = 0.3;
+    }
+
+    const calculatedTax = salary * taxRate;
+    setTax(calculatedTax);
+    setShowHelp(false);
+  };
+
+  const clearForm = () => {
+    setSalary("");
+    setGender("");
+    setTax(null);
+    setShowHelp(false);
+  };
+
+  return (
+    <div style={styles.container}>
+      <h2>Simple Tax Calculator</h2>
+      <div style={styles.formGroup}>
+        <label>Annual Salary:</label>
+        <input
+          type="number"
+          value={salary}
+          onChange={(e) => setSalary(Number(e.target.value))}
+          placeholder="Enter annual salary"
+          style={styles.input}
+        />
+      </div>
+      <div style={styles.formGroup}>
+        <label>Gender:</label>
+        <select
+          value={gender}
+          onChange={(e) => setGender(e.target.value)}
+          style={styles.input}
+        >
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+      <div style={styles.buttonGroup}>
+        <button style={styles.button} onClick={calculateTax}>Calculate</button>
+        <button style={styles.button} onClick={clearForm}>Clear</button>
+        <button style={styles.button} onClick={() => setShowHelp(!showHelp)}>Help</button>
+        <button style={styles.quitButton} onClick={() => window.close()}>Quit</button>
+      </div>
+      {tax !== null && <h3>Tax to Pay: ₹{tax.toFixed(2)}</h3>}
+      {showHelp && (
+        <div style={styles.helpBox}>
+          <h4>Assumed Tax Slabs:</h4>
+          <p><strong>Male:</strong></p>
+          <ul>
+            <li>Up to ₹2,50,000: No Tax</li>
+            <li>₹2,50,001 to ₹5,00,000: 5%</li>
+            <li>₹5,00,001 to ₹10,00,000: 20%</li>
+            <li>Above ₹10,00,000: 30%</li>
+          </ul>
+          <p><strong>Female:</strong></p>
+          <ul>
+            <li>Up to ₹3,00,000: No Tax</li>
+            <li>₹3,00,001 to ₹5,00,000: 5%</li>
+            <li>₹5,00,001 to ₹10,00,000: 20%</li>
+            <li>Above ₹10,00,000: 30%</li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const styles = {
+  container: {
+    maxWidth: "500px",
+    margin: "auto",
+    padding: "20px",
+    backgroundColor: "#f9f9f9",
+    borderRadius: "10px",
+    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+    fontFamily: "Arial, sans-serif",
+  },
+  formGroup: {
+    marginBottom: "15px",
+  },
+  input: {
+    width: "100%",
+    padding: "10px",
+    marginTop: "5px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+  },
+  buttonGroup: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "20px",
+  },
+  button: {
+    padding: "10px 15px",
+    backgroundColor: "#007bff",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+  },
+  quitButton: {
+    padding: "10px 15px",
+    backgroundColor: "#dc3545",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+  },
+  helpBox: {
+    backgroundColor: "#eef",
+    marginTop: "20px",
+    padding: "15px",
+    borderRadius: "5px",
+  },
+};
+
+
+-------------------------------------------------------------------------------------------------------
+selenium Youtube
+package com.sample;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.List;
+
+public class FirstSeleniumScript {
+    public static void main(String[] args) {
+        // Set the path to the ChromeDriver executable
+        System.setProperty("webdriver.chrome.driver", "D:\\chrome drivers\\chromedriver-win64\\chromedriver.exe");
+
+        // Initialize Chrome browser
+        WebDriver driver = new ChromeDriver();
+
+        try {
+            // Navigate to YouTube
+            driver.get("https://www.youtube.com");
+
+            // Maximize the browser window
+            driver.manage().window().maximize();
+
+            // Locate the search box and enter query
+            WebElement search = driver.findElement(By.name("search_query"));
+            search.sendKeys("software testing");
+            search.sendKeys(Keys.ENTER);
+
+            // Wait for results to load
+            Thread.sleep(3000);
+
+            // Find all video title elements
+            List<WebElement> videos = driver.findElements(By.id("video-title"));
+
+            // Click the third video (index 2)
+            if (videos.size() >= 3) {
+                videos.get(2).click();
+                System.out.println("3rd video clicked");
+            }
+
+            // Wait to observe video playing
+            Thread.sleep(5000);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            driver.quit(); // Close browser
+        }
+    }
+}
+------------------------------------------------------------------------------------------------------------------
+selenium login tests
+package com.Loginonly;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class LoginTest {
+    public static void main(String[] args) {
+        // Set path to ChromeDriver
+        System.setProperty("webdriver.chrome.driver", "D:\\chrome drivers\\chromedriver-win64\\chromedriver.exe");
+
+        // Create driver instance
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+
+        try {
+            // Open the local HTML file (replace path with your actual path)
+            driver.get("D://ecllipse//tp//login.html");
+
+            // Fill the form
+            WebElement usernameField = driver.findElement(By.id("username"));
+            WebElement passwordField = driver.findElement(By.id("password"));
+            WebElement loginButton = driver.findElement(By.id("loginButton"));
+
+            usernameField.sendKeys("admin");
+            passwordField.sendKeys("admin123");
+            loginButton.click();
+
+            // Wait for message (simple sleep for this demo)
+            Thread.sleep(5000);
+
+            // Get the result message
+            WebElement message = driver.findElement(By.id("message"));
+            String result = message.getText();
+
+            // Print result
+            if (result.contains("Login successful")) {
+                System.out.println("✅ Test Passed: " + result);
+            } else {
+                System.out.println("❌ Test Failed: " + result);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            driver.quit(); // Close browser
+        }
+    }
+}
+-------------------------------------------------------------------------------------------------------------------
