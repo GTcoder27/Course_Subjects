@@ -1,0 +1,92 @@
+% Optimized MATLAB code for LZW image compression and decompression
+
+clc;
+clear;
+close all;
+
+% Read the input image
+disp('Reading input image...');
+img = imread('sun.jpg'); % Use a grayscale image
+imshow(img);
+title('Original Image');
+drawnow;
+
+% Convert image to a 1D array for LZW processing
+imgData = double(img(:)');
+
+% Perform LZW compression
+disp('Compressing image using LZW...');
+compressedData = LZW_Compress(imgData);
+
+disp(['Compression complete. Compressed size: ', num2str(length(compressedData))]);
+
+% Perform LZW decompression
+disp('Decompressing image using LZW...');
+decompressedData = LZW_Decompress(compressedData);
+
+% Reshape to original image size
+decompressedImage = reshape(decompressedData, size(img));
+decompressedImage = uint8(decompressedImage);
+
+% Display decompressed image
+figure;
+imshow(decompressedImage, []);
+title('Decompressed Image');
+drawnow;
+
+% Optimized LZW Compression Function
+function compressedData = LZW_Compress(inputData)
+    dictionary = containers.Map('KeyType', 'char', 'ValueType', 'int32');
+    for i = 0:255
+        dictionary(char(i)) = i;
+    end
+    nextCode = 256;
+    compressedData = zeros(1, length(inputData), 'int32');
+    index = 1;
+    currentString = char(inputData(1));
+    
+    for i = 2:length(inputData)
+        currentChar = char(inputData(i));
+        newString = [currentString, currentChar];
+        
+        if isKey(dictionary, newString)
+            currentString = newString;
+        else
+            compressedData(index) = dictionary(currentString);
+            index = index + 1;
+            dictionary(newString) = nextCode;
+            nextCode = nextCode + 1;
+            currentString = currentChar;
+        end
+    end
+    
+    compressedData(index) = dictionary(currentString);
+    compressedData = compressedData(1:index);
+end
+
+% Optimized LZW Decompression Function
+function decompressedData = LZW_Decompress(compressedData)
+    dictionary = containers.Map('KeyType', 'int32', 'ValueType', 'char');
+    for i = 0:255
+        dictionary(i) = char(i);
+    end
+    nextCode = 256;
+    decompressedData = dictionary(compressedData(1));
+    previousString = decompressedData;
+    
+    for i = 2:length(compressedData)
+        currentCode = compressedData(i);
+        
+        if isKey(dictionary, currentCode)
+            currentString = dictionary(currentCode);
+        else
+            currentString = [previousString, previousString(1)];
+        end
+        
+        decompressedData = [decompressedData, currentString];
+        dictionary(nextCode) = [previousString, currentString(1)];
+        nextCode = nextCode + 1;
+        previousString = currentString;
+    end
+    decompressedData = uint8(decompressedData);
+end

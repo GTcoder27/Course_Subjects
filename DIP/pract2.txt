@@ -1,0 +1,59 @@
+img = imread("temp.jpg");
+% Convert to grayscale
+[rows, cols, channels] = size(img);
+gray_img = zeros(rows, cols);
+for r = 1:rows
+    for c = 1:cols
+        R = double(img(r, c, 1));
+        G = double(img(r, c, 2));
+        B = double(img(r, c, 3));
+        gray_img(r, c) = 0.2989 * R + 0.5870 * G + 0.1140 * B;
+    end
+end
+gray_img = uint8(gray_img);
+subplot(3, 3, 1), imshow(img), title('Original Image');
+subplot(3, 3, 2), imshow(gray_img), title('Grayscale Image');
+% Contrast Stretching for gray scale image
+min_gray = double(min(gray_img(:)));
+max_gray = double(max(gray_img(:)));
+contrast_stretched = zeros(size(gray_img));
+for r = 1:rows
+    for c = 1:cols
+        contrast_stretched(r, c) = 255 * (double(gray_img(r, c)) - min_gray) / (max_gray - min_gray);
+    end
+end
+contrast_stretched = uint8(contrast_stretched);
+subplot(3, 3, 3), imshow(contrast_stretched), title('Contrast Stretched Image');
+% Slicing of gray scale image
+min_gray = min(gray_img(:));
+max_gray = max(gray_img(:));
+sliced_img = zeros(size(gray_img));
+for r = 1:rows
+    for c = 1:cols
+        if gray_img(r, c) < 100
+            sliced_img(r, c) = 50;
+        elseif gray_img(r, c) > 175
+            sliced_img(r, c) = 50;
+        else
+            sliced_img(r, c) = 255;
+        end
+    end
+end
+subplot(3, 3, 4), imshow(uint8(sliced_img)), title('Sliced Image');
+% Contrast Stretching for origional image
+RGB_contrast_stretched = zeros(size(img), 'uint8');
+% Perform contrast stretching for each channel
+for ch = 1:channels
+    % Identify the minimum and maximum intensity values for the current channel
+    min_val = double(min(img(:, :, ch), [], 'all'));
+    max_val = double(max(img(:, :, ch), [], 'all'));
+    % Apply the contrast stretching transformation for the current channel
+    for r = 1:rows
+        for c = 1:cols
+            RGB_contrast_stretched(r, c, ch) = 255 * (double(img(r, c, ch)) - min_val) / (max_val - min_val);
+        end
+    end
+end
+figure;
+subplot(1, 2, 1), imshow(img), title('original RGB Image');
+subplot(1, 2, 2), imshow(RGB_contrast_stretched), title('Contrast Stretched RGB Image');

@@ -1,0 +1,34 @@
+%Read the image
+
+img = imread('peppers.png');
+
+%Display the original image and its histogram
+subplot(2,2,1);
+imshow(img)
+title('Original Image');
+
+subplot(2,2,2); 
+imhist(img);
+title('Histogram of Original Image');
+
+%Create a high contrast image by multiplying the original image 2 times
+high_contrast_img = uint8(double(img)*2);
+
+%Display high contrast image and its histogram
+subplot(2,2,3)
+imshow(high_contrast_img);
+title('Histogram of High Contrast image');
+
+%Apply histogram equalization to the original image
+equalized_img = histeq(img);
+
+%Display the equalized image and its histogram
+figure;
+subplot(1,2,1);
+imshow(equalized_img);
+title('Histogram Equalized img');
+
+subplot(1,2,2);
+imhist(equalized_img);
+title('Histogram of Equalized Image');
+

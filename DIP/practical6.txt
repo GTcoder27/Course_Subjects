@@ -1,0 +1,50 @@
+% Read an image and convert to grayscale
+img = imread('nature_image.jpg'); % Use a built-in test image
+if size(img, 3) == 3 
+    img = rgb2gray(img);
+end
+
+% Display original image
+figure;
+imshow(img);
+title('Original Image');
+
+% Compute histogram and probabilities
+[counts, symbols] = imhist(img);
+probabilities = counts / sum(counts); 
+
+% Remove zero probabilities
+non_zero_idx = probabilities > 0;
+symbols = symbols(non_zero_idx);
+probabilities = probabilities(non_zero_idx);
+
+% Generate Huffman dictionary
+huffman_dict = huffmandict(symbols, probabilities);
+
+% Flatten the image into a 1D array
+img_vector = img(:);
+
+% Encode image using Huffman coding
+encoded_data = huffmanenco(img_vector, huffman_dict);
+
+% Decode the Huffman encoded data
+decoded_data = huffmandeco(encoded_data, huffman_dict);
+
+% Reshape decoded data to original image size
+decoded_img = uint8(reshape(decoded_data, size(img)));
+
+% Display reconstructed image
+figure;
+imshow(decoded_img);
+title('Reconstructed Image');
+
+% Compression Ratio Calculation
+original_bits = numel(img) * 8; % Original image size in bits
+encoded_bits = numel(encoded_data); % Encoded image size in bits
+compression_ratio = original_bits / encoded_bits;
+fprintf('Compression Ratio: %.2f\n', compression_ratio);
+
+% Compute and display PSNR
+mse = mean((double(img(:)) - double(decoded_img(:))).^2);
+psnr_value = 10 * log10(255^2 / mse);
+fprintf('PSNR: %.2f dB\n', psnr_value);

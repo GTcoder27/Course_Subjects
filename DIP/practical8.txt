@@ -1,0 +1,16 @@
+% Read and convert image to grayscale
+img = imread('sun.jpg');   % You can replace with any image
+gray_img = rgb2gray(img);
+% Apply edge detection techniques
+edge_roberts = edge(gray_img, 'roberts');
+edge_sobel   = edge(gray_img, 'sobel');
+edge_prewitt = edge(gray_img, 'prewitt');
+edge_canny   = edge(gray_img, 'canny');
+% Display results
+figure;
+subplot(2,3,1), imshow(img), title('Original Image');
+subplot(2,3,2), imshow(gray_img), title('Grayscale Image');
+subplot(2,3,4), imshow(edge_roberts), title('Roberts Edge');
+subplot(2,3,5), imshow(edge_sobel), title('Sobel Edge');
+subplot(2,3,6), imshow(edge_prewitt), title('Prewitt Edge');
+subplot(2,3,3), imshow(edge_canny), title('Canny Edge');
