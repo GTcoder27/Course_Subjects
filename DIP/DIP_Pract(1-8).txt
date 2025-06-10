@@ -1,0 +1,466 @@
+Practical_1 
+
+( RGB color
+image plane separation, image sampling, quantization and false
+contouring.) 
+
+% Step 1: Load and display an RGB image
+imageFile = 'yourImg.extension'; % Example image file
+I = imread(imageFile);  % Read the image
+% Step 2: Separate RGB color planes
+R = I (:,:,1);  % Red plane
+G = I(:,:,2);  % Green plane
+B = I(:,:,3);  % Blue plane
+% Step 3: Image Sampling (Downsampling)
+factor = 0.5;  % Downsampling factor (reduce the image size by 50%)
+I_resized = imresize(I, factor);
+% Step 4: Quantization (Reducing color levels)
+nLevels = 8;  % Reduce to 8 levels per color channel
+I_quantized = uint8(floor(double(I) / (256 / nLevels)) * (256 / nLevels));
+% Step 5: False Contouring
+% We will use the same quantized image to create the false contouring effect
+I_contour = I_quantized;
+% Display the image
+subplot(3, 3, 1); imshow(I);  
+title('Original RGB Image');
+% Display the individual planes
+subplot(3, 3, 2); imshow(R); title('Red Plane');
+subplot(3, 3, 3); imshow(G); title('Green Plane');
+subplot (3, 3, 4); imshow(B); title('Blue Plane');
+% Display the resized image
+subplot(3, 3, 5); imshow(I_resized);
+title ('Resized (Downsampled) Image');
+% Display the false contouring effect
+subplot(3, 3, 6 ); imshow(I_contour);
+title('Image with False Contouring');
+
+% Display the quantized image
+subplot(3, 3, 7 ); imshow(I_quantized);
+title('Quantized Image with 8 Levels');
+
+--------------------------------------------------------------------------------
+
+Practical_2 
+
+(the conversion of 
+color image to grey level image, contrast stretching, intensity
+level slicing, and bit-plane slicing.
+
+)
+% Load a color image
+I = imread('peacock.jpg'); % Example image; replace with your own image
+% 1. Convert color image to grayscale
+gray_image = rgb2gray(I);
+% 2. Contrast Stretching
+% Define the lower and upper bounds for contrast stretching
+min_gray = double(min(gray_image(:)));
+max_gray = double(max(gray_image(:)));
+contrast_stretched = uint8(255 * (double(gray_image) - min_gray) / (max_gray - min_gray));
+% 3. Intensity Level Slicing
+% Define the range of intensity levels (e.g., 100 to 150)
+lower_bound = 100;
+upper_bound = 150;
+intensity_sliced = gray_image;
+intensity_sliced(gray_image < lower_bound | gray_image > upper_bound) = 0;
+% 4. Bit-Plane Slicing
+% Get the bit planes from the grayscale image
+bit_planes = zeros(size(gray_image, 1), size(gray_image, 2), 8);
+for i = 1:8
+    bit_planes(:,:,i) = bitget(gray_image, i);
+end
+% Display the image
+subplot(4, 3, 1); imshow(I);  
+title('Original RGB Image');
+subplot(4, 3, 2); imshow(gray_image);
+title('Grayscale Image');
+subplot(4, 3, 3); imshow(contrast_stretched);
+title('Contrast Stretched Image');
+subplot(4, 3, 4); imshow(intensity_sliced);
+title('Intensity Level Sliced Image');
+% Display each bit plane
+for i = 1:8
+    subplot(4, 3, i+3);
+    imshow(bit_planes(:,:,i));
+    title(['Bit Plane ', num2str(i)]);
+end
+----------------------------------------------------------------------------------
+
+Practical_3  (learn the different
+contrast images, histogram of grey level images, and histogram
+equalization of grey level images.)
+
+
+% Step 1: Read an image
+img = imread('cameraman.tif');  % You can use any grayscale image
+
+% Step 2: Display the original image and its histogram
+subplot(2,2,1);
+imshow(img);
+title('Original Image');
+
+subplot(2,2,2);
+imhist(img);
+title('Histogram of Original Image');
+
+% Step 3: Create a high contrast image by multiplying the original image by a factor
+high_contrast_img = uint8(double(img) * 2);  % Increasing contrast by a factor of 2
+
+% Step 4: Display high contrast image and its histogram
+subplot(2,2,3);
+imshow(high_contrast_img);
+title('High Contrast Image');
+
+subplot(2,2,4);
+imhist(high_contrast_img);
+title('Histogram of High Contrast Image');
+
+% Step 5: Apply histogram equalization to the original image
+equalized_img = histeq(img);
+
+% Step 6: Display the equalized image and its histogram
+figure;
+subplot(1,2,1);
+imshow(equalized_img);
+title('Histogram Equalized Image');
+
+subplot(1,2,2);
+imhist(equalized_img);
+title('Histogram of Equalized Image');
+-------------------------------------------------------------------
+
+Practical_4
+
+
+(image filtering
+operations of smoothing and sharpening in spatial domain.)
+
+
+
+% Step 1: Read the image
+img = imread('billi.jpg'); % Replace with your image file if needed
+if size(img, 3) == 3
+    img = rgb2gray(img); % Convert to grayscale if it's a color image
+end
+
+% Step 2: Display the original image
+subplot(2,3,1);
+imshow(img);
+title('Original Image');
+
+% Step 3: Smoothing Filter (Gaussian filter)
+h_smooth = fspecial('gaussian', [5 5], 2); % 5x5 Gaussian kernel with std = 2
+smoothed_img = imfilter(img, h_smooth);
+
+% Step 4: Display the smoothed image
+subplot(2,3,2);
+imshow(smoothed_img);
+title('Smoothed Image (Gaussian Filter)');
+
+% Step 5: Sharpening Filter (Laplacian of Gaussian)
+h_sharpen = fspecial('laplacian', 0.2); % Laplacian filter for sharpening
+sharpened_img = imfilter(img, h_sharpen);
+
+% Step 6: Display the sharpened image
+subplot(2,3,3);
+imshow(sharpened_img);
+title('Sharpened Image (Laplacian Filter)');
+
+% Step 7: Display Histogram of the original image
+subplot(2,3,4);
+imhist(img);
+title('Histogram of Original Image');
+
+% Step 8: Display Histogram of the smoothed image
+subplot(2,3,5);
+imhist(smoothed_img);
+title('Histogram of Smoothed Image');
+
+% Step 9: Display Histogram of the sharpened image
+subplot(2,3,6);
+imhist(sharpened_img);
+title('Histogram of Sharpened Image');
+------------------------------------------------------------------------------
+
+Practical_5
+
+(the image filtering
+operations of smoothing and sharpening in frequency domain.)
+
+
+% Read the image
+img = imread('panda.jpg');  % replace 'image.jpg' with your image path
+img_gray = rgb2gray(img);    % Convert to grayscale (if it's a color image)
+imshow(img_gray);
+title('Original Image');
+
+% Convert the image to double precision for processing
+img_double = double(img_gray);
+
+% Compute the Fourier Transform of the image
+F = fft2(img_double);
+F_shifted = fftshift(F);  % Shift zero frequency to the center
+
+% Create a frequency filter for smoothing (low-pass filter)
+[rows, cols] = size(img_gray);
+[u, v] = meshgrid(1:cols, 1:rows);
+u = u - ceil(cols / 2);
+v = v - ceil(rows / 2);
+D = sqrt(u.^2 + v.^2);  % Distance matrix
+cutoff = 50;  % Cutoff frequency for low-pass filter
+H_smooth = double(D <= cutoff);  % Low-pass filter (Gaussian-like)
+
+% Create a frequency filter for sharpening (high-pass filter)
+H_sharp = 1 - H_smooth;  % High-pass filter (inverse of low-pass)
+
+% Apply the low-pass (smoothing) filter in frequency domain
+F_smooth = F_shifted .* H_smooth;
+img_smooth = ifft2(ifftshift(F_smooth));  % Inverse FFT to get the filtered image
+
+% Apply the high-pass (sharpening) filter in frequency domain
+F_sharp = F_shifted .* H_sharp;
+img_sharp = ifft2(ifftshift(F_sharp));  % Inverse FFT to get the filtered image
+
+% Display the results
+figure;
+subplot(1, 3, 1);
+imshow(img_gray, []);
+title('Original Image');
+
+subplot(1, 3, 2);
+imshow(abs(img_smooth), []);  % Display the magnitude of the smooth image
+title('Smoothed Image (Low-pass filter)');
+
+subplot(1, 3, 3);
+imshow(abs(img_sharp), []);  % Display the magnitude of the sharpened image
+title('Sharpened Image (High-pass filter)');
+-------------------------------------------------------------------------------------------------------
+
+Practical_6
+(Code to learn the Huffman coding
+based image compression.)
+
+
+% Read the original image
+original_image = imread('panda.jpg');
+
+% (i) Convert the given image to grey level image and visualize
+gray_image = rgb2gray(original_image);
+
+
+% (ii) Generate the histogram of the obtained grey level image
+[counts, binLocations] = imhist(gray_image);
+bar(binLocations, counts);
+
+% (iii) Generate Huffman code for the grey level image
+% Step 1: Get the probability distribution of pixel values
+total_pixels = numel(gray_image);
+[counts, pixel_values] = imhist(gray_image);
+pixel_probabilities = counts / total_pixels;
+
+% Remove zero probabilities (pixel values that don't appear in the image)
+valid_indices = pixel_probabilities > 0;
+symbols = pixel_values(valid_indices);
+probabilities = pixel_probabilities(valid_indices);
+
+% Step 2: Generate the Huffman dictionary
+dict = huffmandict(symbols, probabilities);
+
+% Encode the image using the Huffman code
+encoded_image = huffmanenco(gray_image(:), dict);
+
+% (iv) Evaluate the compression time, bits per pixel, and compression ratio
+compression_start_time = tic;
+compressed_bits = numel(encoded_image);
+compression_time = toc(compression_start_time);
+
+% Bits per pixel
+bpp = compressed_bits / total_pixels;
+
+% Compression ratio
+original_bits = total_pixels * 8; % 8 bits per pixel for the original grayscale image
+compression_ratio = original_bits / compressed_bits;
+
+% (v) Decompress the encoded data and reconstruct the image
+decompression_start_time = tic;
+decoded_vector = huffmandeco(encoded_image, dict);
+decoded_image = reshape(decoded_vector, size(gray_image));
+decompression_time = toc(decompression_start_time);
+
+% (vi) Evaluate the decompression time and PSNR
+% Ensure both images are uint8 for PSNR calculation
+decoded_image = uint8(decoded_image);
+
+% PSNR (Peak Signal-to-Noise Ratio)
+psnr_value = psnr(decoded_image, gray_image);
+
+% (vii) Plot the results
+subplot(2, 2, 1);
+imshow(gray_image);
+title('Original Grayscale Image');
+
+subplot(2, 2, 2);
+imshow(decoded_image);
+title('Reconstructed Image after Huffman Compression');
+
+subplot(2, 2, 3);
+bar(binLocations, counts);
+title('Histogram of Grayscale Image');
+xlabel('Pixel Value');
+ylabel('Frequency');
+
+subplot(2, 2, 4);
+axis off;
+text(0.1, 0.9, ['Compression Time: ', num2str(compression_time, '%.4f'), ' seconds'], 'FontSize', 10);
+text(0.1, 0.7, ['Bits per Pixel: ', num2str(bpp, '%.2f')], 'FontSize', 10);
+text(0.1, 0.5, ['Compression Ratio: ', num2str(compression_ratio, '%.2f')], 'FontSize', 10);
+text(0.1, 0.3, ['Decompression Time: ', num2str(decompression_time, '%.4f'), ' seconds'], 'FontSize', 10);
+text(0.1, 0.1, ['PSNR: ', num2str(psnr_value, '%.2f'), ' dB'], 'FontSize', 10);
+
+sgtitle('Huffman Image Compression Results');
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Practical_7 
+
+(Code to learn the LZW image
+compression technique.)
+
+
+% Read the original image
+original_image = imread('sampleimage.jpg'); % Load the image (change the file name if needed)
+
+% (i) Convert the given image to grey level image and visualize
+gray_image = rgb2gray(original_image); % Converts the image to grayscale
+imshow(gray_image);
+title('Original Grayscale Image');
+
+% (ii) LZW Compression and Decompression
+% Step 1: Flatten the image to a 1D vector for LZW processing
+image_data = gray_image(:);
+
+% Step 2: LZW Compression
+[compressed_data, dictionary] = lzw_compress(image_data);
+
+% Step 3: LZW Decompression
+decompressed_data = lzw_decompress(compressed_data, dictionary);
+
+% Check if decompressed data needs to be reshaped or padded
+if numel(decompressed_data) > numel(image_data)
+    decompressed_data = decompressed_data(1:numel(image_data)); % Trim extra data
+elseif numel(decompressed_data) < numel(image_data)
+    decompressed_data = [decompressed_data; zeros(numel(image_data) - numel(decompressed_data), 1)]; % Pad with zeros
+end
+
+% Reshape decompressed data back to the original image size
+decompressed_image = reshape(decompressed_data, size(gray_image));
+
+% Ensure the decompressed image is of uint8 type for display
+decompressed_image = uint8(decompressed_image);
+
+% (iii) Show the original and decompressed images side by side
+figure;
+subplot(1, 2, 1); % First subplot for the original image
+imshow(gray_image);
+title('Original Grayscale Image');
+
+subplot(1, 2, 2); % Second subplot for the decompressed image
+imshow(decompressed_image);
+title('Decompressed Image using LZW');
+
+% (iv) Compare Compression Performance
+original_size = numel(image_data) * 8; % Original image size in bits
+compressed_size = numel(compressed_data) * 16; % Assuming 16-bit representation for LZW indices
+compression_ratio = original_size / compressed_size;
+disp(['Compression Ratio: ', num2str(compression_ratio)]);
+
+% (v) Calculate PSNR (Peak Signal-to-Noise Ratio)
+psnr_value = psnr(decompressed_image, gray_image);
+disp(['PSNR: ', num2str(psnr_value)]);
+
+% Helper Functions for LZW Compression and Decompression
+
+function [compressed_data, dictionary] = lzw_compress(data)
+    % Initialize dictionary with single characters
+    dictionary = containers.Map('KeyType', 'char', 'ValueType', 'any');
+    dict_size = 256; % Standard initial dictionary size for grayscale images
+    for i = 0:255
+        dictionary(char(i)) = i;
+    end
+    % Initialize variables for LZW compression
+    current_string = '';
+    compressed_data = [];
+    
+    for i = 1:length(data)
+        current_char = char(data(i));
+        next_string = strcat(current_string, current_char);
+        
+        if isKey(dictionary, next_string)
+            current_string = next_string;
+        else
+            % Output the code for the current string
+            compressed_data = [compressed_data, dictionary(current_string)];
+            % Add the next string to the dictionary
+            dictionary(next_string) = dict_size;
+            dict_size = dict_size + 1;
+            current_string = current_char;
+        end
+    end
+    
+    % Output the code for the last string
+    if ~isempty(current_string)
+        compressed_data = [compressed_data, dictionary(current_string)];
+    end
+end
+
+function decompressed_data = lzw_decompress(compressed_data, dictionary)
+    % Initialize variables for LZW decompression
+    dict_size = 256; % Standard initial dictionary size for grayscale images
+    inverse_dictionary = containers.Map('KeyType', 'double', 'ValueType', 'any');
+    
+    % Reverse the dictionary
+    for k = 0:255
+        inverse_dictionary(k) = char(k);
+    end
+    
+    % Initialize variables
+    current_code = compressed_data(1);
+    decompressed_data = inverse_dictionary(current_code);
+    current_string = decompressed_data;
+    % Process the compressed data
+    for i = 2:length(compressed_data)
+        current_code = compressed_data(i);
+        if isKey(inverse_dictionary, current_code)
+            current_string = inverse_dictionary(current_code);
+        else
+            current_string = strcat(current_string(1), current_string);
+        end
+        decompressed_data = [decompressed_data, current_string];
+        
+        % Add the new string to the dictionary
+        inverse_dictionary(dict_size) = strcat(current_string(1), current_string);
+        dict_size = dict_size + 1;
+    end
+end
+----------------------------------------------------------------------------------------------------------------------------
+
+Practical_8
+(to learn the image edge MSPA 3
+detection using Roberts Cross Gradient, Sobel, Prewitt and Canny
+edge detectors.)
+
+% Read and convert image to grayscale
+img = imread('panda.jpg');   % You can replace with any image
+gray_img = rgb2gray(img);
+% Apply edge detection techniques
+edge_roberts = edge(gray_img, 'roberts');
+edge_sobel   = edge(gray_img, 'sobel');
+edge_prewitt = edge(gray_img, 'prewitt');
+edge_canny   = edge(gray_img, 'canny');
+% Display results
+figure;
+subplot(2,3,1), imshow(img), title('Original Image');
+subplot(2,3,2), imshow(gray_img), title('Grayscale Image');
+subplot(2,3,4), imshow(edge_roberts), title('Roberts Edge');
+subplot(2,3,5), imshow(edge_sobel), title('Sobel Edge');
+subplot(2,3,6), imshow(edge_prewitt), title('Prewitt Edge');
+subplot(2,3,3), imshow(edge_canny), title('Canny Edge');
+------------------------------------------------------------------------------------------------------------------------------
