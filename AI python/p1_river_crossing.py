@@ -1,55 +1,78 @@
-def is_valid(state):
-    bank1, bank2 = state
-    for bank in [bank1, bank2]:
-        if 'M' not in bank:
-            if 'T' in bank and 'C' in bank:
-                return False  # Tiger eats Cow
-            if 'C' in bank and 'G' in bank:
-                return False  # Cow eats Grass
-    return True
 
-def move(state, item):
-    bank1, bank2 = state
-    if 'M' in bank1:
-        new_bank1 = bank1.copy()
-        new_bank2 = bank2.copy()
-        new_bank1.remove('M')
-        new_bank2.append('M')
-        if item != 'M':
-            new_bank1.remove(item)
-            new_bank2.append(item)
-    else:
-        new_bank1 = bank1.copy()
-        new_bank2 = bank2.copy()
-        new_bank2.remove('M')
-        new_bank1.append('M')
-        if item != 'M':
-            new_bank2.remove(item)
-            new_bank1.append(item)
-    return (sorted(new_bank1), sorted(new_bank2))
+def is_valid_state(state):  
+    man, tiger, cow, grass = state  
+    if tiger == cow and man != cow:  
+        return False  
+    if cow == grass and man != cow:  
+        return False  
+    return True  
 
-def dfs(state, visited, path):
-    bank1, bank2 = state
-    if sorted(bank2) == ['C', 'G', 'M', 'T']:
-        return path
+def get_next_states(state):  
+    man, tiger, cow, grass = state  
+    next_states = []  
 
-    visited.add((tuple(bank1), tuple(bank2)))
+    new_state = (1 - man, tiger, cow, grass)  
+    if is_valid_state(new_state):  
+        next_states.append(new_state)  
 
-    current_bank = bank1 if 'M' in bank1 else bank2
-    for item in current_bank:
-        next_state = move(state, item)
-        if is_valid(next_state) and (tuple(next_state[0]), tuple(next_state[1])) not in visited:
-            result = dfs(next_state, visited, path + [next_state])
-            if result:
-                return result
-    return None
+    for i, item in enumerate([tiger, cow, grass], start=1):  
+        if item == man:  
+            new_state = list(state)  
+            new_state[0] = 1 - man  
+            new_state[i] = 1 - item  
+            new_state = tuple(new_state)  
+            if is_valid_state(new_state):  
+                next_states.append(new_state)  
 
-initial_state = (['M', 'T', 'C', 'G'], [])
-solution = dfs(initial_state, set(), [initial_state])
+    return next_states  
 
-for i, step in enumerate(solution):
-    print(f"Step {i}: Bank1 = {step[0]}, Bank2 = {step[1]}")
+def solve_dfs(state, goal_state, path, visited):  
+    if state == goal_state:  
+        return path + [goal_state]  
+
+    visited.add(state)  
+
+    for next_state in get_next_states(state):  
+        if next_state not in visited:  
+            result = solve_dfs(next_state, goal_state, path + [state], visited)  
+            if result:  
+                return result  
+    return None  
 
 
+def get_location(state):
+    if state == 1:
+        return "left"
+    return "right"
+ 
 
+def main():  
+    print("Enter the initial state:")  
+    man = int(input("Man's position"))
+    tiger = int(input("Tiger's position"))  
+    cow = int(input("Cow's position"))
+    grass = int(input("Grass's position"))
+    initial_state = (man, tiger, cow, grass)  
 
+    print("\nEnter the goal state:")  
+    man_goal = int(input("Man's position"))
+    tiger_goal = int(input("Tiger's position")) 
+    cow_goal = int(input("Cow's position"))
+    grass_goal = int(input("Grass's position"))
+    goal_state = (man_goal, tiger_goal, cow_goal, grass_goal)  
+
+    visited_states = set()  
+    solution_path = solve_dfs(initial_state, goal_state, [], visited_states)  
+
+    if solution_path:  
+        print("\nSolution Path:")  
+        for step in solution_path:  
+            man, tiger, cow, grass = step
+            print(f"Man: {get_location(man)}, Tiger: {get_location(tiger)}, Cow: {get_location(cow)}, Grass: {get_location(grass)}")
+    else:  
+        print("No solution found.")  
+
+        
+
+if __name__ == "__main__":  
+    main()

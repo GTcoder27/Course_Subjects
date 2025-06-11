@@ -105,7 +105,7 @@ first_cousin(X, Y) :-
 
 % Example queries to test the system:
 % ?- father(john, bob).        % Is john father of bob?
-% ?- mother(X, lisa).          % Who is mother of lisa?
+% ?- mother(X, lisa).            % Who is mother of lisa?
 % ?- sibling(bob, lisa).       % Are bob and lisa siblings?
 % ?- grandparent(john, tom).   % Is john grandparent of tom?
 % ?- first_cousin(tom, mike).  % Are tom and mike first cousins?
