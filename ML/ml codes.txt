@@ -1,90 +1,81 @@
 practical 1
-1. # Importing Python libraries commonly used in Data Science
-2.
-3. import numpy as np                # For numerical computations
-4. import pandas as pd               # For data manipulation and
-analysis
-5. import matplotlib.pyplot as plt   # For basic data visualization
-6. import seaborn as sns             # For advanced and beautiful
-visualizations
-7. %matplotlib inline
-8.
-9. print(&quot;Libraries imported successfully!&quot;)
-10.
-11. # Load dataset directly from seaborn&#39;s built-in datasets
-12. df = sns.load_dataset(&#39;titanic&#39;)
-13.
-14. # Display first 5 rows
-15. df.head()
-1. # Display basic info about dataset
-2. df.info()
-3.
-4. # Basic statistical summary of numerical columns
-5. df.describe()
-6.
-7. # Checking for missing values
-8. df.isnull().sum()
-1. # Drop columns that are not useful for analysis
-2. df = df.drop([&#39;deck&#39;, &#39;embark_town&#39;], axis=1)
-3.
-4. # Fill missing age values with median
-5. df[&#39;age&#39;].fillna(df[&#39;age&#39;].median(), inplace=True)
-6.
-7. # Fill missing &#39;embarked&#39; values with the mode (most frequent
-value)
-8. df[&#39;embarked&#39;].fillna(df[&#39;embarked&#39;].mode()[0], inplace=True)
-9.
-10. # Convert &#39;sex&#39; to numeric values (male=0, female=1)
-11. df[&#39;sex&#39;] = df[&#39;sex&#39;].map({&#39;male&#39;: 0, &#39;female&#39;: 1})
-12.
-13. # Verify cleaning
-14. df.isnull().sum()
-a. plt.figure(figsize=(8,5))
-b. sns.boxplot(x=&#39;pclass&#39;, y=&#39;age&#39;, data=df, palette=&#39;Set2&#39;)
-c. plt.title(&quot;Passenger Class vs Age&quot;)
-d. plt.show()
+import pandas as pd 
+import matplotlib.pyplot as plt 
+df = pd.read_csv("Data.csv").values 
+df["Age"].fillna(df["Age"].mean(), inplace=True) 
+df["Salary"].fillna(df["Salary"].mean(), inplace=True) 
+plt.figure(figsize=(6,4)) 
+avg_salary = df.groupby("Country")["Salary"].mean() 
+  
+avg_salary.plot(kind="bar", color="skyblue", edgecolor="black") 
+plt.title("Average Salary by Country") 
+plt.ylabel("Average Salary") 
+plt.xlabel("Country") 
+plt.grid(axis="y", linestyle="--", alpha=0.7) 
+plt.show() 
+ 
+plt.figure(figsize=(6,4)) 
+colors = {"Yes": "green", "No": "red"} 
+for purchase_status in df["Purchased"].unique(): 
+    subset = df[df["Purchased"] == purchase_status] 
+    plt.scatter(subset["Age"], subset["Salary"],  
+                label=purchase_status,  
+                color=colors[purchase_status],  
+                s=70, alpha=0.7, edgecolors="k") 
+plt.title("Age vs Salary (by Purchase Decision)") 
+plt.xlabel("Age") 
+plt.ylabel("Salary") 
+plt.legend(title="Purchased") 
+plt.grid(True, linestyle="--", alpha=0.6) 
+plt.show() 
+ 
+plt.figure(figsize=(6,4)) 
+purchase_counts = df.groupby(["Country", "Purchased"]).size().unstack(fill_value=0) 
+purchase_counts.plot(kind="bar", stacked=True, color=["red", "green"], edgecolor="black") 
+plt.title("Purchase Decision by Country") 
+plt.ylabel("Count") 
+plt.xlabel("Country") 
+plt.grid(axis="y", linestyle="--", alpha=0.7) 
+plt.show()
+
 ____________________________________________
 practical 2
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-# Scikit-learn modules for dataset, model, and metrics
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import (
-    accuracy_score, confusion_matrix, classification_report, ConfusionMatrixDisplay
-)
-# Load the dataset
-iris = load_iris()
-X = iris.data
-y = iris.target
-# Convert to DataFrame for better understanding
-df = pd.DataFrame(X, columns=iris.feature_names)
-df[&#39;target&#39;] = iris.target
-print(&quot;Iris Dataset Loaded Successfully!&quot;)
-print(df.head())
-# 80% for training, 20% for testing
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
-)
-print(f&quot;Training samples: {len(X_train)}, Testing samples: {len(X_test)}&quot;)
-# Initialize the Gaussian Naive Bayes model
-model = GaussianNB()
-# Fit the model on training data
-model.fit(X_train, y_train)
-# Predict on test data
-y_pred = model.predict(X_test)
-# Calculate accuracy
-accuracy = accuracy_score(y_test, y_pred)
-print(f&quot; Model Accuracy: {accuracy*100:.2f}%&quot;)
-# Generate classification report
-print(&quot;\nClassification Report:&quot;)
-print(classification_report(y_test, y_pred, target_names=iris.target_names))
-# Generate confusion matrix
-cm = confusion_matrix(y_test, y_pred)
-print(&quot;\n Confusion Matrix:\n&quot;, cm)
+
+import pandas as pd 
+from sklearn.model_selection import train_test_split 
+from sklearn.preprocessing import LabelEncoder 
+from sklearn.naive_bayes import GaussianNB 
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report 
+# Dataset 
+data = { 
+"Country": ["France", "Spain", "Germany", "Spain", "Germany", "France", "Spain", "France", 
+"Germany", "France"], 
+"Age": [44, 27, 30, 38, 40, 35, None, 48, 50, 37], 
+"Salary": [72000, 48000, 54000, 61000, None, 58000, 52000, 79000, 83000, 67000], 
+"Purchased": ["No", "Yes", "No", "No", "Yes", "Yes", "No", "Yes", "No", "Yes"] 
+} 
+df = pd.DataFrame(data) 
+# Handle missing values 
+df["Age"].fillna(df["Age"].mean(), inplace=True) 
+df["Salary"].fillna(df["Salary"].mean(), inplace=True) 
+# Encode categorical data 
+le_country = LabelEncoder() 
+df["Country"] = le_country.fit_transform(df["Country"]) 
+le_purchase = LabelEncoder() 
+df["Purchased"] = le_purchase.fit_transform(df["Purchased"]) 
+# Split features and target 
+X = df[["Country", "Age", "Salary"]] 
+y = df["Purchased"] 
+# Train-test split 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0) 
+# Naive Bayes model 
+nb = GaussianNB() 
+nb.fit(X_train, y_train) 
+y_pred = nb.predict(X_test) 
+# Evaluation metrics 
+print("Accuracy:", accuracy_score(y_test, y_pred)) 
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred)) 
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
 ____________________________________________
 practical 3
 import numpy as np
