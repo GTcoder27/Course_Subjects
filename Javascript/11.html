@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+    <script>
+        const student =
+        {
+            name: "Girish",
+            marks: 90,
+            function1: function () {
+                console.log(this.girish);
+            },
+            function2() {
+                console.log(this.marks);
+            }
+
+        }
+        // student.function1();
+
+        const student2 = {
+            gender: "Male"
+        }
+        student2.__proto__ = student;
+        console.log(student2.name);
+
+
+
+        class myclass{
+            constructor(){
+                let myname = "My name is Girish ";
+                console.log(myname);
+            }
+            start(){
+                console.log("hello");
+            }
+        }
+        let girish = new myclass();
+        girish.start();
+        
+
+        class parent_class {
+            printname()
+            {
+                let name3 = "Hii I am Girish ";
+                console.log(name3);
+            }
+        }
+        class child_class extends parent_class {
+
+        }
+        let cc = new child_class;
+        console.log(cc.printname());
+
+
+
+
+
+    </script>
+</body>
+</html>

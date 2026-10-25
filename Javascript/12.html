@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+
+        // function hello()
+        // {
+        //     console.log("Hello Girish");
+        // }
+        // setTimeout(hello , 3000);
+
+        // setTimeout(() => {
+        //     console.log("hello again");
+        // }, 2000);
+
+
+
+
+        function getdata(id)
+        {
+            return new Promise((resolve,reject) => {
+                setTimeout(() => {
+                    console.log("id = ",id);
+                    // resolve("success");
+                },2000)
+            })
+        }
+
+        async function data()
+        {
+            console.log("Getting data 1");
+            await getdata(1);
+            console.log("Getting data 2");
+            await getdata(2);
+            console.log("Getting data 3");
+            await getdata(3);
+        }
+        data();
+
+
+        
+        // IIFE
+        (async function ()
+        {
+            console.log("Getting data 1");
+            await getdata(1);
+            console.log("Getting data 2");
+            await getdata(2);
+            console.log("Getting data 3");
+            await getdata(3);
+        })();
+
+
+
+    </script>
+</body>
+</html>

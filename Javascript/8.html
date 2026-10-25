@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width= , initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <button id="mybutton">Click Me </button>
+    <br>
+    <button id="mybutton2">Click Me </button>
+    <button id="mode">Dark/Light</button>
+    <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta dolorem, laborum obcaecati quam adipisci repellat doloremque dolorum possimus ipsum hic ex distinctio quos, iure harum molestiae excepturi laboriosam animi ab. Odit voluptatum commodi a sapiente autem nulla magnam, dolore tempora quibusdam. Libero tempore alias unde!</div>
+
+
+<script>
+    let button1 = document.querySelector("#mybutton");
+    button1.onclick = () =>{
+        console.log("Button was clicked");
+    }; 
+    button1.onmouseover = () => {
+        button1.style.backgroundColor = "orange";
+        console.log("Button was hovered");
+    };
+
+    const handler = () => {
+        button2.style.backgroundColor = "green";
+    } 
+
+    let button2 = document.querySelector("#mybutton2");
+    button2.addEventListener("click",() => {
+        console.log("hello !");
+        
+    });
+    button2.addEventListener("click",() => {
+        button2.style.backgroundColor = "green";
+        
+    });
+    button2.addEventListener("click",handler);
+    button2.addEventListener("click",handler);
+
+    
+
+
+
+    let body = document.querySelector("body");
+    let modebtn = document.querySelector("#mode");
+    let modecolor = "white";
+    let textcolor = "black";
+    const modechange = () => {
+        if(modecolor == "white")
+        {
+            body.style.backgroundColor = "black";
+            body.style.color = "white";
+            modecolor = "black";
+            textcolor = "white";
+        }
+        else
+        {
+            body.style.backgroundColor = "white";
+            body.style.color = "black";
+            modecolor = "white";
+            textcolor = "black";
+        }
+    };
+    modebtn.addEventListener("click", modechange);
+
+    
+
+</script>    
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #main{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .box{
+            margin: 0px 20px;
+            width: 20vw;
+            height: 20vh;
+            border: 2px solid black;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Hello JavaScript</h1>
+    <div id="main">
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+    </div>
+
+<script>
+    let a = document.querySelector("h1");
+    a.append(" From YCCE");
+    let b = document.getElementsByClassName("box");
+    b[0].style.backgroundColor = "red";
+    b[1].style.backgroundColor = "green";
+    b[2].style.backgroundColor = "blue";
+    b[3].style.backgroundColor = "orange";
+    b[4].style.backgroundColor = "yellow";
+
+</script>    
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .oldclass{
+        width: 200px;
+        height: 200px;
+        border: 2px solid black;
+        background-color: aquamarine;
+        border-radius: 3%;
+    }
+
+    .newclass
+    {
+        background-color: rgb(208, 67, 255);
+    } 
+</style>
+<body>
+    
+    <p class="oldclass" >Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi, a.</p>
+<script>
+
+    let newbtn = document.createElement("button");
+    newbtn.innerText = "Click Me";
+    newbtn.style.backgroundColor = "red";
+    newbtn.style.color = "white";
+    let body = document.querySelector("body");
+    body.prepend(newbtn);
+
+    let para = document.querySelector("p");
+    para.setAttribute("class","newclass");
+    console.log(para.getAttribute("class"));
+    
+
+
+</script>    
+</body>
+</html>

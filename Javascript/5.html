@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+<script>
+    let name = prompt("enter your name");
+
+    
+    // function myfun(name)
+    // {
+    //     let count = 0;
+    //     for(let i=0;i<name.length;i++)
+    //     {
+    //         if(name[i] == 'a'||name[i] == 'e'||name[i] == 'e'||name[i] == 'i'||name[i] == 'u' )
+    //         {
+    //             count++;
+    //         }
+    //     }
+    //     return count;
+    // }
+
+
+    let myfun = (name) => {
+        let count = 0;
+        for(let i=0;i<name.length;i++)
+        {
+            if(name[i] == 'a'||name[i] == 'e'||name[i] == 'e'||name[i] == 'i'||name[i] == 'u' )
+            {
+                count++;
+            }
+        }
+        return count;
+    };
+    console.log(myfun(name));
+
+
+</script>    
+</body>
+</html>
