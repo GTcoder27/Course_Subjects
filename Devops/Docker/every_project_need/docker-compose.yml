@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  # Web application service
+  web:
+    image: node:latest
+    ports:
+      - "8080:3000"
+    # Docker automatically joins 'web' and 'db' to the default project network
+
+  # Database service
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: secret
+    # No ports section means it is only accessible to the 'web' service internally

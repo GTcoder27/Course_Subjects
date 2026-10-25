@@ -1,0 +1,30 @@
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables and secrets
+.env
+.env.*
+
+# Git
+.git/
+.gitignore
+
+# IDE files
+.vscode/
+.idea/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS files
+.DS_Store

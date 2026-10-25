@@ -1,0 +1,40 @@
+version: '0.1' 
+
+services:
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: langgraph
+      POSTGRES_USER: langgraph
+      POSTGRES_PASSWORD: langgraph
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U langgraph"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - langgraph-data:/var/lib/postgresql/data
+  chat-agent:
+    image: chat-agent:local
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      REDIS_URI: redis://redis:6379
+      DATABASE_URI: postgres://langgraph:langgraph@postgres:5432/langgraph?sslmode=disable
+    volumes:
+      - ~/.aws:/root/.aws:ro
+    depends_on:
+      redis:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+volumes:
+  langgraph-data: 

@@ -1,0 +1,8 @@
+
+services:
+  langgraph-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: langgraph-app
+    restart: "no"

@@ -1,0 +1,9 @@
+version: '0.1' 
+
+services:
+  langgraph_project_1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_container_1
+    restart: "no"

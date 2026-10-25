@@ -1,0 +1,11 @@
+{
+    "dependencies":["."], 
+    "graphs":{
+        "chat_agent":"./src/graph/graph.py:graph"
+    },
+    "python-version":"3.12",
+    "env":".env",
+    "image_distro":"wolfi"
+
+}
+
